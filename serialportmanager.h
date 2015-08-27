@@ -1,6 +1,10 @@
 #ifndef SERIALPORTREADER_H
 #define SERIALPORTREADER_H
 
+// THIS CONTROLS PID VID, SET TO FTDI FOR DEFAULTS, UNO FOR ARDUINO UNO, SPARK FOR SPARKFUN FTDI_BASIC CHIP
+#define FTDI
+
+
 #include <QtSerialPort/QtSerialPort>
 #include <QtWidgets>
 #include <QTextStream>
@@ -15,8 +19,6 @@
 
 #define UNO_PID 67
 #define UNO_VID 9025
-
-#define UNO
 
 #ifdef UNO
 #define PID UNO_PID
@@ -47,13 +49,13 @@ public:
     bool sendBits( const QString );
 //    bool sendChar( const QString );
 
-    bool reconnect();
-
     bool setUpSerial(const qint32 baud);
-
+    bool reconnect();
     bool reconnect(const qint32 );
+
 signals:
     void packetReceived(const QByteArray);
+
     void serialPortError(QSerialPort::SerialPortError);
     void connected(qint32);
     void disconnected();

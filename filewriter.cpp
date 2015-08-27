@@ -1,5 +1,6 @@
 #include "filewriter.h"
 
+// constructor
 FileWriter::FileWriter(QObject *parent, QString fileLocation) : QObject(parent)
 {
     m_fileName = QDateTime::currentDateTime().toString(QString("/dd-MM-yyyy_hh-mm-ss_'byteLog.txt'"));
@@ -8,8 +9,11 @@ FileWriter::FileWriter(QObject *parent, QString fileLocation) : QObject(parent)
     m_file = new QFile(m_fileLocation.arg(m_fileName));
     m_stream = new QTextStream(m_file);
     m_logTimeStamps = false;
-}
+} // constructor
 
+
+
+// destructor
 FileWriter::~FileWriter()
 {
     m_stream->flush();
@@ -18,8 +22,11 @@ FileWriter::~FileWriter()
     }
     delete m_file;
     delete m_stream;
-}
+} // destructor
 
+
+
+// closeFile
 void FileWriter::closeFile()
 {
     if(m_stream != 0){
@@ -36,8 +43,11 @@ void FileWriter::closeFile()
         delete m_file;
         m_file = 0;
     }
-}
+} // closeFile
 
+
+
+// openFile
 void FileWriter::openFile()
 {
     QString previousName = m_file->fileName();
@@ -58,26 +68,34 @@ void FileWriter::openFile()
         emit successfulOpen();
         m_stream = new QTextStream(m_file);
     }
-}
+} // openFile
 
+
+
+// setUp
 void FileWriter::setUp(){
     if(!m_file->open(QIODevice::WriteOnly)){
         emit failedToOpen(m_fileLocation.arg(m_fileName));
     } else{
         emit successfulOpen();
     }
-}
+} // setUp
 
+
+
+// logTimeStamps
 void FileWriter::logTimeStamps(bool checked)
 {
     m_logTimeStamps = checked;
-}
+} // logTimeStamps
 
+
+
+// handlePacket
 void FileWriter::handlePacket(QByteArray packet)
 {
     QString currentText;
     QString packetAsHex;
-//    qDebug() << packet.toHex();
     const int maxBytesPerLine = 16;
 //    const int maxBitsPerLine = 4 * maxBytesPerLine;
 //    const int maxCharPerLine = 20;
@@ -126,7 +144,7 @@ void FileWriter::handlePacket(QByteArray packet)
     }
     *m_stream << currentText;
     m_stream->flush();
-}
+} // handlePacket
 
 
 

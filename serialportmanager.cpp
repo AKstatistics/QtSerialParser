@@ -65,7 +65,7 @@ bool SerialPortManager::sendHex(const QString hexStringData)
 
 
 
-//// sendChar()
+// sendChar()
 //bool SerialPortManager::sendChar(const QString charStringData)
 //{
 //    QByteArray charData = QByteArray::fromStdString(charStringData.toStdString());
@@ -187,7 +187,6 @@ bool SerialPortManager::setUpSerial(const qint32 baud)
 
         if(m_serialPort->open(QSerialPort::ReadWrite)){
             emit connected(baud);
-//            m_serialPort->clear();
             return true;
         } else{
             emit failedToConnect();

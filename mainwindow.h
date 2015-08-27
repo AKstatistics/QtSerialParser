@@ -27,7 +27,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_sendMessage_clicked();
     void handlePacket(QByteArray);
     void handleSerialPortError(QSerialPort::SerialPortError);
     void handleSerialNotFound();
@@ -35,16 +34,13 @@ private slots:
     void handleDisconnected();
 
     void on_actionReconnect_triggered();
-
     void on_actionBaud_9600_triggered();
-
     void on_actionBaud_10400_triggered();
 
     void on_pauseDisplay_clicked(bool checked);
-
     void on_pauseLogging_clicked(bool checked);
-
     void on_logTime_clicked(bool checked);
+    void on_sendMessage_clicked();
 
     void on_escape();
 

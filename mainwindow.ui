@@ -46,6 +46,9 @@
           </item>
           <item>
            <widget class="QRadioButton" name="displayOutputHex">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Hex</string>
             </property>
@@ -163,12 +166,12 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="sendMessageChar">
+           <widget class="QRadioButton" name="sendMessageBit">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Char</string>
+             <string>Bits</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">sendButtonGroup</string>
@@ -195,12 +198,12 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="sendMessageBit">
+           <widget class="QRadioButton" name="sendMessageChar">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Bits</string>
+             <string>Char</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">sendButtonGroup</string>
@@ -307,8 +310,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>displayOutputBit</tabstop>
   <tabstop>displayOutputHex</tabstop>
   <tabstop>displayOutputChar</tabstop>
-  <tabstop>sendMessageBit</tabstop>
-  <tabstop>sendMessageChar</tabstop>
   <tabstop>sendMessageHex</tabstop>
   <tabstop>serialTextBrowser</tabstop>
  </tabstops>

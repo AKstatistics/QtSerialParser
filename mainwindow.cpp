@@ -183,6 +183,7 @@ void MainWindow::handlePacket(QByteArray packet)
 } // handlePacket
 
 
+
 // handleSerialPortError()
 void MainWindow::handleSerialPortError(QSerialPort::SerialPortError error)
 {
@@ -192,12 +193,14 @@ void MainWindow::handleSerialPortError(QSerialPort::SerialPortError error)
 } // handleSerialPortError()
 
 
+
 // handleSerialNotFound()
 void MainWindow::handleSerialNotFound()
 {
     statusMessage("Serial device not found!");
 
 } // handleSerialNotFound()
+
 
 
 // handleConnected()
@@ -245,7 +248,6 @@ void MainWindow::on_actionReconnect_triggered()
 
 
 
-
 // pause check
 void MainWindow::on_pauseLogging_clicked(bool checked)
 {
@@ -269,15 +271,17 @@ void MainWindow::on_actionBaud_9600_triggered()
 
 
 
+// set baud to 10400
 void MainWindow::on_actionBaud_10400_triggered()
 {
     ui->actionBaud_9600->setEnabled(true);
     ui->actionBaud_10400->setEnabled(false);
     m_comPort->reconnect(10400);
-}
+} // set baud to 10400
 
 
 
+// pauseDisplay clicked
 void MainWindow::on_pauseDisplay_clicked(bool checked)
 {
     if(checked){
@@ -285,15 +289,20 @@ void MainWindow::on_pauseDisplay_clicked(bool checked)
     } else{
         connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
     }
-}
+} // pauseDisplay clicked
 
 
+
+// logTimeClicked
 void MainWindow::on_logTime_clicked(bool checked)
 {
     m_writer->logTimeStamps(checked);
-}
+} // log time clicked
 
+
+
+// escape key
 void MainWindow::on_escape()
 {
     ui->messageLineEdit->clear();
-}
+} // escape key
