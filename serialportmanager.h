@@ -45,7 +45,7 @@ public:
 
     bool sendHex( const QString );
     bool sendBits( const QString );
-    bool sendChar( const QString );
+//    bool sendChar( const QString );
 
     bool reconnect();
 

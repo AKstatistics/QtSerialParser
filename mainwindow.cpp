@@ -58,7 +58,7 @@ void MainWindow::on_sendMessage_clicked()
         sendOk = m_comPort->sendHex(sendDataString);
         break;
     case AS_CHAR:
-        sendOk = m_comPort->sendChar(sendDataString);
+//        sendOk = m_comPort->sendChar(sendDataString);
         break;
     }
 

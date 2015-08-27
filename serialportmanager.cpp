@@ -64,15 +64,15 @@ bool SerialPortManager::sendHex(const QString hexStringData)
 
 
 
-// sendChar()
-bool SerialPortManager::sendChar(const QString charStringData)
-{
-    QByteArray charData = QByteArray::fromStdString(charStringData.toStdString());
-    if( send(charData) == charStringData.length() ){
-        return true;
-    }
-    return false;
-} // sendChar()
+//// sendChar()
+//bool SerialPortManager::sendChar(const QString charStringData)
+//{
+//    QByteArray charData = QByteArray::fromStdString(charStringData.toStdString());
+//    if( send(charData) == charStringData.length() ){
+//        return true;
+//    }
+//    return false;
+//} // sendChar()
 
 
 
