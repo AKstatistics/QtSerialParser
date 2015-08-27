@@ -6,7 +6,6 @@
 #include <QTextStream>
 #include <QByteArray>
 #include <QObject>
-#include "ftd2xx.h"
 
 #define FT232_PID 6001
 #define FT232_VID 0403
@@ -50,12 +49,13 @@ public:
 
     bool reconnect();
 
-    bool setUpSerial();
+    bool setUpSerial(const qint32 baud);
 
+    bool reconnect(const qint32 );
 signals:
     void packetReceived(const QByteArray);
     void serialPortError(QSerialPort::SerialPortError);
-    void connected();
+    void connected(qint32);
     void disconnected();
     void connectionTimeout(const int);
     void serialNotFound();

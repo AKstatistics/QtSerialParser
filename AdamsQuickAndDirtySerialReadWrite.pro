@@ -15,12 +15,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     serialportmanager.cpp \
-    ftdserialport.cpp
+    filewriter.cpp
 
 HEADERS  += mainwindow.h \
     serialportmanager.h \
-    ftd2xx.h \
-    WinTypes.h \
-    ftdserialport.h
+    filewriter.h
 
 FORMS    += mainwindow.ui

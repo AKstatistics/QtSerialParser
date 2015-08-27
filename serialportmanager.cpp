@@ -108,11 +108,26 @@ bool SerialPortManager::sendBits(const QString bitStringData)
 // reconnect()
 bool SerialPortManager::reconnect()
 {
+    qint32 baud = m_serialPort->baudRate();
     if(m_serialPort->isOpen()){
         m_serialPort->close();
         emit disconnected();
     }
-    if( !setUpSerial() ){
+    if( !setUpSerial(baud) ){
+        return false;
+    }
+    return true;
+} // reconnect()
+
+
+// reconnect()
+bool SerialPortManager::reconnect(const qint32 baud)
+{
+    if(m_serialPort->isOpen()){
+        m_serialPort->close();
+        emit disconnected();
+    }
+    if( !setUpSerial(baud) ){
         return false;
     }
     return true;
@@ -138,11 +153,10 @@ void SerialPortManager::handleTimeout()
 
 
 // setUpSerial()
-bool SerialPortManager::setUpSerial()
+bool SerialPortManager::setUpSerial(const qint32 baud)
 {
     const quint16 vendorId = VID;
     const quint16 productId = PID;
-    const qint32 baud = 10400;
 
     QString portName("");
     bool isAvailable = false;
@@ -171,7 +185,7 @@ bool SerialPortManager::setUpSerial()
         m_serialPort->setStopBits(QSerialPort::OneStop);
 
         if(m_serialPort->open(QSerialPort::ReadWrite)){
-            emit connected();
+            emit connected(baud);
             return true;
         } else{
             emit failedToConnect();

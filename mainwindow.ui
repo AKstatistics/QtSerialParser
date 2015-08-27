@@ -136,7 +136,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QCheckBox" name="checkBox">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Pause Logging</string>
@@ -242,6 +242,9 @@ p, li { white-space: pre-wrap; }
      <string>Serial</string>
     </property>
     <addaction name="actionReconnect"/>
+    <addaction name="separator"/>
+    <addaction name="actionBaud_9600"/>
+    <addaction name="actionBaud_10400"/>
    </widget>
    <addaction name="menuSerial"/>
   </widget>
@@ -249,6 +252,19 @@ p, li { white-space: pre-wrap; }
   <action name="actionReconnect">
    <property name="text">
     <string>Reconnect</string>
+   </property>
+  </action>
+  <action name="actionBaud_9600">
+   <property name="text">
+    <string>Baud 9600</string>
+   </property>
+  </action>
+  <action name="actionBaud_10400">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Baud 10400</string>
    </property>
   </action>
  </widget>

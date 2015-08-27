@@ -21,13 +21,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->outputButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
 
     m_comPort = new SerialPortManager();
+    m_writer = new FileWriter();
 
     connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
     connect(m_comPort,SIGNAL(serialNotFound()),this,SLOT(handleSerialNotFound()));
     connect(m_comPort,SIGNAL(serialPortError(QSerialPort::SerialPortError)),this,SLOT(handleSerialPortError(QSerialPort::SerialPortError)));
-    connect(m_comPort,SIGNAL(connected()),this,SLOT(handleConnected()));
+    connect(m_comPort,SIGNAL(connected(qint32)),this,SLOT(handleConnected(qint32)));
+    connect(m_comPort,SIGNAL(disconnected()),this,SLOT(handleDisconnected()));
+    connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
 
-    m_comPort->setUpSerial();
+    m_comPort->setUpSerial(10400);
+    m_writer->setUp();
 } // constructor
 
 
@@ -166,11 +170,19 @@ void MainWindow::handleSerialNotFound()
 
 
 // handleConnected()
-void MainWindow::handleConnected()
+void MainWindow::handleConnected(qint32 baud)
 {
-    statusMessage(QString("Connected."), 5000);
+    statusMessage(QString("Connected. Baud %1").arg(baud), 5000);
 
 } // handleConnected()
+
+
+
+// handleDisconnected()
+void MainWindow::handleDisconnected()
+{
+    statusMessage(QString("Disonnected."), 5000);
+} // handleDisconnected()
 
 
 
@@ -212,3 +224,32 @@ void MainWindow::on_pauseCheckBox_clicked(bool checked)
         connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
     }
 } // pause check
+
+
+
+// set baud to 9600
+void MainWindow::on_actionBaud_9600_triggered()
+{
+    ui->actionBaud_9600->setEnabled(false);
+    ui->actionBaud_10400->setEnabled(true);
+    m_comPort->reconnect(9600);
+} // set baud to 9600
+
+
+
+void MainWindow::on_actionBaud_10400_triggered()
+{
+    ui->actionBaud_9600->setEnabled(true);
+    ui->actionBaud_10400->setEnabled(false);
+    m_comPort->reconnect(10400);
+}
+
+void MainWindow::on_checkBox_clicked(bool checked)
+{
+    if(checked){
+        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
+    } else{
+        m_writer->openFile();
+        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
+    }
+}
