@@ -44,6 +44,8 @@ private slots:
 
     void on_escape();
 
+    void on_actionBaud_115200_triggered();
+
 private:
     Ui::MainWindow *ui;
     SerialPortManager *m_comPort;

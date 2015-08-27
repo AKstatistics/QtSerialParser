@@ -266,6 +266,7 @@ void MainWindow::on_actionBaud_9600_triggered()
 {
     ui->actionBaud_9600->setEnabled(false);
     ui->actionBaud_10400->setEnabled(true);
+    ui->actionBaud_115200->setEnabled(true);
     m_comPort->reconnect(9600);
 } // set baud to 9600
 
@@ -276,6 +277,7 @@ void MainWindow::on_actionBaud_10400_triggered()
 {
     ui->actionBaud_9600->setEnabled(true);
     ui->actionBaud_10400->setEnabled(false);
+    ui->actionBaud_115200->setEnabled(true);
     m_comPort->reconnect(10400);
 } // set baud to 10400
 
@@ -306,3 +308,12 @@ void MainWindow::on_escape()
 {
     ui->messageLineEdit->clear();
 } // escape key
+
+void MainWindow::on_actionBaud_115200_triggered()
+{
+    ui->actionBaud_9600->setEnabled(true);
+    ui->actionBaud_10400->setEnabled(true);
+    ui->actionBaud_115200->setEnabled(false);
+    m_comPort->reconnect(115200);
+
+}

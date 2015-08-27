@@ -154,7 +154,7 @@ p, li { white-space: pre-wrap; }
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="messageInputLayout">
         <item>
          <layout class="QHBoxLayout" name="messageLabelAndButtons">
@@ -277,6 +277,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="actionBaud_9600"/>
     <addaction name="actionBaud_10400"/>
+    <addaction name="actionBaud_115200"/>
    </widget>
    <addaction name="menuSerial"/>
   </widget>
@@ -299,6 +300,11 @@ p, li { white-space: pre-wrap; }
     <string>Baud 10400</string>
    </property>
   </action>
+  <action name="actionBaud_115200">
+   <property name="text">
+    <string>Baud 115200</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
@@ -316,7 +322,7 @@ p, li { white-space: pre-wrap; }
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="sendButtonGroup"/>
   <buttongroup name="outputButtonGroup"/>
+  <buttongroup name="sendButtonGroup"/>
  </buttongroups>
 </ui>

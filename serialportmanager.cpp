@@ -175,6 +175,10 @@ bool SerialPortManager::setUpSerial(const qint32 baud)
             }
         }
     }
+#ifdef BRAIN
+    portName = QString("COM5");
+#endif
+
 
     // Future improvements: consider providing setup dialog in info box
     if(isAvailable){
