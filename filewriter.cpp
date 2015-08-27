@@ -1,9 +1,9 @@
 #include "filewriter.h"
 
-FileWriter::FileWriter(QObject *parent) : QObject(parent)
+FileWriter::FileWriter(QObject *parent, QString fileLocation) : QObject(parent)
 {
     m_fileName = QDateTime::currentDateTime().toString(QString("dd-MM-yyyy_hh-mm_'byteLog.txt'"));
-    m_fileLocation = QString("/Users/adamlevy/Qtprojects/AdamsQuickAndDirtySerialReadWrite/");
+    m_fileLocation = fileLocation;
 
     m_file = new QFile(m_fileLocation.append(m_fileName));
     m_stream = new QTextStream(m_file);

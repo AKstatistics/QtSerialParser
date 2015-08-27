@@ -5,12 +5,13 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDateTime>
+#include <QFileDialog>
 
 class FileWriter : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileWriter(QObject *parent = 0);
+    explicit FileWriter(QObject *parent = 0,QString fileLocation = QString("/"));
     ~FileWriter();
 
     void openFile();

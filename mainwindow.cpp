@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->outputButtonGroup->setId(ui->displayOutputHex, AS_HEX);
     ui->outputButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
 
-    m_comPort = new SerialPortManager();
-    m_writer = new FileWriter();
+    m_comPort = new SerialPortManager(this);
+    m_writer = new FileWriter(this,QFileDialog::getExistingDirectory(this,QString("Select log file save location")));
 
     connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
     connect(m_comPort,SIGNAL(serialNotFound()),this,SLOT(handleSerialNotFound()));
