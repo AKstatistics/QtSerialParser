@@ -25,8 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // allocate
     m_comPort = new SerialPortManager(this);
+    // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
     m_writer = new FileWriter(this,
          QFileDialog::getExistingDirectory(this,QString("Select log file save location"),"/Users/adamlevy/Qtprojects/SerialData"));
+    // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
 
     // handlePacket
     connect(m_comPort,SIGNAL(packetReceived(QByteArray)),SLOT(handlePacket(QByteArray)));

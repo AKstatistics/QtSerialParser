@@ -11,7 +11,9 @@ class FileWriter : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileWriter(QObject *parent = 0,QString fileLocation = QString("/Users/adamlevy/Qtprojects/SerialData%1"));
+    // CHANGE DEFAULT SAVE FILE LOCATION FOR WINDOWS
+    explicit FileWriter(QObject *parent = 0,
+                        QString fileLocation = QString("/Users/adamlevy/Qtprojects/SerialData%1"));
     ~FileWriter();
 
     void openFile();
