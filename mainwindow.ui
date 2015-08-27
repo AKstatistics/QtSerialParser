@@ -27,7 +27,7 @@
           <item>
            <widget class="QLabel" name="serialOutputLabel">
             <property name="text">
-             <string>Serial Output</string>
+             <string>Serial Rx</string>
             </property>
            </widget>
           </item>
@@ -121,19 +121,29 @@ p, li { white-space: pre-wrap; }
         <item>
          <layout class="QHBoxLayout" name="pauseChecks">
           <item>
-           <widget class="QCheckBox" name="pauseCheckBox">
+           <widget class="QCheckBox" name="pauseDisplay">
             <property name="text">
              <string>Pause Display</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="pauseDisplay">
+           <widget class="QCheckBox" name="pauseLogging">
             <property name="enabled">
              <bool>true</bool>
             </property>
             <property name="text">
              <string>Pause Logging</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="logTime">
+            <property name="text">
+             <string>Log Time Stamps</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -148,14 +158,14 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QLabel" name="serialMessageLabel">
             <property name="text">
-             <string>Serial Message</string>
+             <string>Serial Tx</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="sendMessageChar">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="text">
              <string>Char</string>
@@ -168,7 +178,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QRadioButton" name="sendMessageHex">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="text">
              <string>Hex</string>
@@ -187,7 +197,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QRadioButton" name="sendMessageBit">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="text">
              <string>Bits</string>
@@ -209,19 +219,35 @@ p, li { white-space: pre-wrap; }
              </font>
             </property>
             <property name="inputMask">
-             <string>HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH</string>
+             <string>HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH</string>
+            </property>
+            <property name="maxLength">
+             <number>251</number>
+            </property>
+            <property name="frame">
+             <bool>true</bool>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="sendMessage">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Send</string>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QPushButton" name="sendMessage">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>ENTER</string>
+              </property>
+              <property name="text">
+               <string>Send</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -272,6 +298,20 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>messageLineEdit</tabstop>
+  <tabstop>sendMessage</tabstop>
+  <tabstop>pauseDisplay</tabstop>
+  <tabstop>pauseLogging</tabstop>
+  <tabstop>logTime</tabstop>
+  <tabstop>displayOutputBit</tabstop>
+  <tabstop>displayOutputHex</tabstop>
+  <tabstop>displayOutputChar</tabstop>
+  <tabstop>sendMessageBit</tabstop>
+  <tabstop>sendMessageChar</tabstop>
+  <tabstop>sendMessageHex</tabstop>
+  <tabstop>serialTextBrowser</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <buttongroups>

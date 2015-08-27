@@ -23,12 +23,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->outputButtonGroup->setId(ui->displayOutputHex, AS_HEX);
     ui->outputButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
 
+    // keyboard shortcuts
+    m_escapeClear = new QShortcut(QKeySequence(Qt::Key_Escape),this);
+
+
     // allocate
     m_comPort = new SerialPortManager(this);
     // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
     m_writer = new FileWriter(this,
          QFileDialog::getExistingDirectory(this,QString("Select log file save location"),"/Users/adamlevy/Qtprojects/SerialData"));
     // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
+
+    // shortcut key connects
+
+    connect(ui->messageLineEdit,SIGNAL(returnPressed()),SLOT(on_sendMessage_clicked()));
+    connect(m_escapeClear, SIGNAL(activated()),SLOT(on_escape()));
 
     // handlePacket
     connect(m_comPort,SIGNAL(packetReceived(QByteArray)),SLOT(handlePacket(QByteArray)));
@@ -60,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete m_comPort;
+    delete m_escapeClear;
     delete ui;
 } // destructor
 
@@ -237,12 +247,13 @@ void MainWindow::on_actionReconnect_triggered()
 
 
 // pause check
-void MainWindow::on_pauseCheckBox_clicked(bool checked)
+void MainWindow::on_pauseLogging_clicked(bool checked)
 {
     if(checked){
-        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
+        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
     } else{
-        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
+        m_writer->openFile();
+        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
     }
 } // pause check
 
@@ -265,12 +276,24 @@ void MainWindow::on_actionBaud_10400_triggered()
     m_comPort->reconnect(10400);
 }
 
-void MainWindow::on_checkBox_clicked(bool checked)
+
+
+void MainWindow::on_pauseDisplay_clicked(bool checked)
 {
     if(checked){
-        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
+        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
     } else{
-        m_writer->openFile();
-        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
+        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
     }
+}
+
+
+void MainWindow::on_logTime_clicked(bool checked)
+{
+    m_writer->logTimeStamps(checked);
+}
+
+void MainWindow::on_escape()
+{
+    ui->messageLineEdit->clear();
 }

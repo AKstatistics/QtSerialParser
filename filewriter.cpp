@@ -7,6 +7,7 @@ FileWriter::FileWriter(QObject *parent, QString fileLocation) : QObject(parent)
 
     m_file = new QFile(m_fileLocation.arg(m_fileName));
     m_stream = new QTextStream(m_file);
+    m_logTimeStamps = false;
 }
 
 FileWriter::~FileWriter()
@@ -67,6 +68,11 @@ void FileWriter::setUp(){
     }
 }
 
+void FileWriter::logTimeStamps(bool checked)
+{
+    m_logTimeStamps = checked;
+}
+
 void FileWriter::handlePacket(QByteArray packet)
 {
     QString currentText;
@@ -83,7 +89,7 @@ void FileWriter::handlePacket(QByteArray packet)
 
     packetAsHex = packet.toHex().toUpper();
     for(int i = 0; i < packetAsHex.length(); ++i){
-        if(counter == 0){
+        if(m_logTimeStamps && counter == 0){
             if(!endOfByte){
                 currentText.append(QDateTime::currentDateTime().toString(QString("hh:mm:ss ")));
                 currentText.append(QString("(%1):  ").arg(numBytes));

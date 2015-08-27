@@ -45,6 +45,10 @@ bool SerialPortManager::sendHex(const QString hexStringData)
 
     int stringLength = formattedString.length();
     int byteLength = stringLength / 2;
+    if(stringLength%2){
+        formattedString.append("0");
+        byteLength++;
+    }
     QByteArray hexData(byteLength,0x00);
     bool ok = false;
     bool allOk = true;
@@ -52,13 +56,6 @@ bool SerialPortManager::sendHex(const QString hexStringData)
     for( int i = 0; i < byteLength; ++i ){
         hexData[i] = formattedString.midRef(i*2,2).toInt(&ok,16);
         allOk &= ok;
-        qDebug() << "i: " << i << " ok: " << ok << " hex: " << hexData.toHex() <<" string: " << formattedString.mid(i*2,2) << " stringToInt: " << formattedString.midRef(i*2,2).toInt(&ok,16);
-    }
-    if( stringLength % 2 ){
-        formattedString.mid(stringLength-1,1).toInt(&ok,16);
-        allOk &= ok;
-        hexData[byteLength - 1] = hexData[byteLength - 1] << 4;
-        qDebug() << "last ";
     }
     if(allOk && send(hexData) == byteLength){
         return true;
@@ -190,6 +187,7 @@ bool SerialPortManager::setUpSerial(const qint32 baud)
 
         if(m_serialPort->open(QSerialPort::ReadWrite)){
             emit connected(baud);
+            m_serialPort->clear();
             return true;
         } else{
             emit failedToConnect();

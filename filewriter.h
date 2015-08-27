@@ -18,6 +18,7 @@ public:
 
     void openFile();
     void setUp();
+    void logTimeStamps(bool);
 
 signals:
     void failedToOpen(QString);
@@ -32,6 +33,7 @@ private:
     QString m_fileName;
     QString m_fileLocation;
     void closeFile();
+    bool m_logTimeStamps;
 };
 
 #endif // FILEWRITER_H
