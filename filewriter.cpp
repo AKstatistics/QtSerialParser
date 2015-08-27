@@ -2,10 +2,10 @@
 
 FileWriter::FileWriter(QObject *parent, QString fileLocation) : QObject(parent)
 {
-    m_fileName = QDateTime::currentDateTime().toString(QString("dd-MM-yyyy_hh-mm_'byteLog.txt'"));
-    m_fileLocation = fileLocation;
+    m_fileName = QDateTime::currentDateTime().toString(QString("/dd-MM-yyyy_hh-mm-ss_'byteLog.txt'"));
+    m_fileLocation = fileLocation.append("%1");
 
-    m_file = new QFile(m_fileLocation.append(m_fileName));
+    m_file = new QFile(m_fileLocation.arg(m_fileName));
     m_stream = new QTextStream(m_file);
 }
 
@@ -39,11 +39,19 @@ void FileWriter::closeFile()
 
 void FileWriter::openFile()
 {
+    QString previousName = m_file->fileName();
     closeFile();
-    m_fileName = QDateTime::currentDateTime().toString(QString("dd-MM-yyyy_hh-mm_'byteLog.txt'"));
-    m_file = new QFile(m_fileLocation.append(m_fileName));
+    m_fileName = QDateTime::currentDateTime().toString(QString("/dd-MM-yyyy_hh-mm-ss"));
+
+    // pretty sure it'll be impossible to create files this fast but just in case
+    if(previousName == m_fileName){
+        m_fileName.append(QDateTime::currentDateTime().toString("-zzz"));
+    }
+
+    m_fileName.append("_byteLog.txt");
+    m_file = new QFile(m_fileLocation.arg(m_fileName));
     if(!m_file->open(QIODevice::WriteOnly)){
-        emit failedToOpen(m_fileLocation.append(m_fileName));
+        emit failedToOpen(m_fileLocation.arg(m_fileName));
     }
     else{
         emit successfulOpen();
@@ -53,7 +61,7 @@ void FileWriter::openFile()
 
 void FileWriter::setUp(){
     if(!m_file->open(QIODevice::WriteOnly)){
-        emit failedToOpen(m_fileLocation.append(m_fileName));
+        emit failedToOpen(m_fileLocation.arg(m_fileName));
     } else{
         emit successfulOpen();
     }

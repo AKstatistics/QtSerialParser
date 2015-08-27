@@ -2,15 +2,18 @@
 #include "ui_mainwindow.h"
 
 
+
 // constructor
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
     ui->setupUi(this);
+
+    // establishes initial proportions of splitter
     ui->splitter->setStretchFactor(0,5);
     ui->splitter->setStretchFactor(1,1);
+
 
     ui->sendButtonGroup->setId(ui->sendMessageBit, AS_BIT);
     ui->sendButtonGroup->setId(ui->sendMessageHex, AS_HEX);
@@ -20,19 +23,35 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->outputButtonGroup->setId(ui->displayOutputHex, AS_HEX);
     ui->outputButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
 
+    // allocate
     m_comPort = new SerialPortManager(this);
-    m_writer = new FileWriter(this,QFileDialog::getExistingDirectory(this,QString("Select log file save location")));
+    m_writer = new FileWriter(this,
+         QFileDialog::getExistingDirectory(this,QString("Select log file save location"),"/Users/adamlevy/Qtprojects/SerialData"));
 
-    connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
-    connect(m_comPort,SIGNAL(serialNotFound()),this,SLOT(handleSerialNotFound()));
-    connect(m_comPort,SIGNAL(serialPortError(QSerialPort::SerialPortError)),this,SLOT(handleSerialPortError(QSerialPort::SerialPortError)));
-    connect(m_comPort,SIGNAL(connected(qint32)),this,SLOT(handleConnected(qint32)));
-    connect(m_comPort,SIGNAL(disconnected()),this,SLOT(handleDisconnected()));
+    // handlePacket
+    connect(m_comPort,SIGNAL(packetReceived(QByteArray)),SLOT(handlePacket(QByteArray)));
+
+    // handleSerialNotFound
+    connect(m_comPort,SIGNAL(serialNotFound()),SLOT(handleSerialNotFound()));
+
+    // handleSerialPortError
+    connect(m_comPort,SIGNAL(serialPortError(QSerialPort::SerialPortError)),SLOT(handleSerialPortError(QSerialPort::SerialPortError)));
+
+    // handleConnected
+    connect(m_comPort,SIGNAL(connected(qint32)),SLOT(handleConnected(qint32)));
+
+    // handleDisconnected
+    connect(m_comPort,SIGNAL(disconnected()),SLOT(handleDisconnected()));
+
+    // handlePacket
     connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
 
-    m_comPort->setUpSerial(10400);
+    // file and serial setup
     m_writer->setUp();
+    m_comPort->setUpSerial(10400);
+
 } // constructor
+
 
 
 // destructor
@@ -43,11 +62,12 @@ MainWindow::~MainWindow()
 } // destructor
 
 
+
 // send message clicked
 void MainWindow::on_sendMessage_clicked()
 {
     int checkedId = ui->sendButtonGroup->checkedId();
-    QString sendDataString = ui->messageTextEdit->toPlainText();
+    QString sendDataString = ui->messageLineEdit->text();
     bool sendOk = false;
 
     switch(checkedId){
@@ -63,12 +83,13 @@ void MainWindow::on_sendMessage_clicked()
     }
 
     if(sendOk){
-        ui->messageTextEdit->clear();
+        //ui->messageTextEdit->clear();
         statusMessage(QString("Sent"), 5000);
     } else{
         statusMessage(QString("Failed to send!"), 5000);
     }
 } // send message clicked
+
 
 
 // handlePacket
