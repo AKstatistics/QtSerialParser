@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_comPort = new SerialPortManager(this);
     // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
     m_writer = new FileWriter(this,
-         QFileDialog::getExistingDirectory(this,QString("Select log file save location"),"/Users/adamlevy/Qtprojects/SerialData"));
+         QFileDialog::getExistingDirectory(this,QString("Select log file save location"),DEFAULT_DIR));
     // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
 
     // shortcut key connects

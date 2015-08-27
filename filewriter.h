@@ -1,6 +1,29 @@
 #ifndef FILEWRITER_H
 #define FILEWRITER_H
 
+
+
+// CHANGE DEFAULT SAVE FILE LOCATION HERE, do not add a trailing forward slash
+#define BRIANS_DEFAULT_DIR "your/dir/here/in/quotes/no/trailing/slash"
+#define ADAM // CHANGE ADAM TO BRIAN
+
+
+#define ADAMS_DEFAULT_DIR "/Users/adamlevy/Qtprojects/SerialData"
+#define FARASIS_TABLET_DEFAULT_DIR
+
+
+#ifdef ADAM
+#define DEFAULT_DIR ADAMS_DEFAULT_DIR
+#endif
+
+#ifdef FARASIS
+#define DEFAULT_DIR FARASIS_TABLET_DEFAULT_DIR
+#endif
+
+#ifdef BRIAN
+#define DEFAULT_DIR BRIANS_DEFAULT_DIR
+#endif
+
 #include <QObject>
 #include <QFile>
 #include <QTextStream>
@@ -11,9 +34,8 @@ class FileWriter : public QObject
 {
     Q_OBJECT
 public:
-    // CHANGE DEFAULT SAVE FILE LOCATION FOR WINDOWS
     explicit FileWriter(QObject *parent = 0,
-                        QString fileLocation = QString("/Users/adamlevy/Qtprojects/SerialData%1"));
+                        QString fileLocation = QString(DEFAULT_DIR).append("%1"));
     ~FileWriter();
 
     void openFile();

@@ -96,7 +96,7 @@ void FileWriter::handlePacket(QByteArray packet)
                 currentText.append(packetAsHex[i]);
                 endOfByte = true;
             } else{
-                currentText.append(packetAsHex[i]).append("  ");
+                currentText.append(packetAsHex[i]).append(" ");
                 endOfByte = false;
                 counter++;
             }
@@ -105,7 +105,7 @@ void FileWriter::handlePacket(QByteArray packet)
                 currentText.append(packetAsHex[i]);
                 endOfByte = true;
             } else{
-                currentText.append(packetAsHex[i]).append('\n');
+                currentText.append(packetAsHex[i]).append(" \n");
                 endOfByte = false;
                 counter = 0;
             }
@@ -115,7 +115,7 @@ void FileWriter::handlePacket(QByteArray packet)
                 currentText.append(packetAsHex[i]);
                 endOfByte = true;
             } else{
-                currentText.append(packetAsHex[i]).append("  ");
+                currentText.append(packetAsHex[i]).append(" ");
                 endOfByte = false;
                 counter++;
             }
