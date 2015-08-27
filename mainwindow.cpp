@@ -82,7 +82,6 @@ void MainWindow::handlePacket(QByteArray packet)
 //    const int maxBitsPerLine = 4 * maxBytesPerLine;
 //    const int maxCharPerLine = 20;
     static quint64 numBytes;
-    static int previousCheckedId;
     static int counter = 0;
     static bool endOfByte = false;
 
@@ -148,7 +147,6 @@ void MainWindow::handlePacket(QByteArray packet)
 
     ui->serialTextBrowser->setText(currentText);
     ui->serialTextBrowser->verticalScrollBar()->triggerAction(QAbstractSlider::SliderToMaximum);
-    previousCheckedId = checkedId;
 } // handlePacket
 
 
