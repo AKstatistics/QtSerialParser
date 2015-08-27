@@ -187,7 +187,7 @@ bool SerialPortManager::setUpSerial(const qint32 baud)
 
         if(m_serialPort->open(QSerialPort::ReadWrite)){
             emit connected(baud);
-            m_serialPort->clear();
+//            m_serialPort->clear();
             return true;
         } else{
             emit failedToConnect();
