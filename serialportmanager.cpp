@@ -165,13 +165,14 @@ bool SerialPortManager::setUpSerial(const qint32 baud)
     // Find the correct port name
     foreach( const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts() ){
         if(serialPortInfo.hasProductIdentifier() && serialPortInfo.hasVendorIdentifier()){
-//            qDebug() << serialPortInfo.portName();
-//            qDebug() << "PID: " << serialPortInfo.productIdentifier();
-//            qDebug() << "VID: " << serialPortInfo.vendorIdentifier();
-            if(serialPortInfo.productIdentifier() == productId && serialPortInfo.vendorIdentifier() == vendorId){
+            qDebug() << serialPortInfo.portName();
+            qDebug() << "PID: " << serialPortInfo.productIdentifier();
+            qDebug() << "VID: " << serialPortInfo.vendorIdentifier();
+//            if(serialPortInfo.productIdentifier() == productId && serialPortInfo.vendorIdentifier() == vendorId){
+            if(!serialPortInfo.isBusy()){
                 portName = serialPortInfo.portName();
                 isAvailable = true;
-//                qDebug() << portName;
+                qDebug() << portName;
             }
         }
     }

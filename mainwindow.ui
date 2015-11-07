@@ -14,8 +14,8 @@
    <string>Quick and Dirty Parser</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -27,7 +27,7 @@
           <item>
            <widget class="QLabel" name="serialOutputLabel">
             <property name="text">
-             <string>Serial Rx</string>
+             <string>Display as:</string>
             </property>
            </widget>
           </item>
@@ -40,7 +40,7 @@
              <string>Bits</string>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">outputButtonGroup</string>
+             <string notr="true">displayButtonGroup</string>
             </attribute>
            </widget>
           </item>
@@ -59,7 +59,7 @@
              <bool>true</bool>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">outputButtonGroup</string>
+             <string notr="true">displayButtonGroup</string>
             </attribute>
            </widget>
           </item>
@@ -72,7 +72,7 @@
              <string>Char</string>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">outputButtonGroup</string>
+             <string notr="true">displayButtonGroup</string>
             </attribute>
            </widget>
           </item>
@@ -124,29 +124,9 @@ p, li { white-space: pre-wrap; }
         <item>
          <layout class="QHBoxLayout" name="pauseChecks">
           <item>
-           <widget class="QCheckBox" name="pauseDisplay">
+           <widget class="QCheckBox" name="pauseScrolling">
             <property name="text">
-             <string>Pause Display</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="pauseLogging">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Pause Logging</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="logTime">
-            <property name="text">
-             <string>Log Time Stamps</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
+             <string>Pause Scrolling</string>
             </property>
            </widget>
           </item>
@@ -161,7 +141,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QLabel" name="serialMessageLabel">
             <property name="text">
-             <string>Serial Tx</string>
+             <string>Send as:</string>
             </property>
            </widget>
           </item>
@@ -275,9 +255,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionReconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionBaud_9600"/>
-    <addaction name="actionBaud_10400"/>
-    <addaction name="actionBaud_115200"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuSerial"/>
   </widget>
@@ -287,22 +265,14 @@ p, li { white-space: pre-wrap; }
     <string>Reconnect</string>
    </property>
   </action>
-  <action name="actionBaud_9600">
+  <action name="actionSettings">
    <property name="text">
-    <string>Baud 9600</string>
+    <string>Settings</string>
    </property>
   </action>
-  <action name="actionBaud_10400">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
+  <action name="actionOptions">
    <property name="text">
-    <string>Baud 10400</string>
-   </property>
-  </action>
-  <action name="actionBaud_115200">
-   <property name="text">
-    <string>Baud 115200</string>
+    <string>Options</string>
    </property>
   </action>
  </widget>
@@ -310,9 +280,7 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>messageLineEdit</tabstop>
   <tabstop>sendMessage</tabstop>
-  <tabstop>pauseDisplay</tabstop>
-  <tabstop>pauseLogging</tabstop>
-  <tabstop>logTime</tabstop>
+  <tabstop>pauseScrolling</tabstop>
   <tabstop>displayOutputBit</tabstop>
   <tabstop>displayOutputHex</tabstop>
   <tabstop>displayOutputChar</tabstop>
@@ -322,7 +290,7 @@ p, li { white-space: pre-wrap; }
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="outputButtonGroup"/>
+  <buttongroup name="displayButtonGroup"/>
   <buttongroup name="sendButtonGroup"/>
  </buttongroups>
 </ui>

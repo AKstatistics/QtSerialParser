@@ -5,6 +5,7 @@
 #include <QShortcut>
 
 #include "serialportmanager.h"
+#include "settingsdialog.h"
 #include "filewriter.h"
 
 #define AS_BIT 0
@@ -34,22 +35,18 @@ private slots:
     void handleDisconnected();
 
     void on_actionReconnect_triggered();
-    void on_actionBaud_9600_triggered();
-    void on_actionBaud_10400_triggered();
 
-    void on_pauseDisplay_clicked(bool checked);
-    void on_pauseLogging_clicked(bool checked);
-    void on_logTime_clicked(bool checked);
     void on_sendMessage_clicked();
 
     void on_escape();
 
-    void on_actionBaud_115200_triggered();
+    void on_actionSettings_triggered();
+
+    void on_pauseScrolling_clicked(bool checked);
 
 private:
     Ui::MainWindow *ui;
     SerialPortManager *m_comPort;
-    FileWriter * m_writer;
     QShortcut * m_escapeClear;
 
     void statusMessage( QString );

@@ -15,10 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     serialportmanager.cpp \
-    filewriter.cpp
+    filewriter.cpp \
+    settingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     serialportmanager.h \
-    filewriter.h
+    filewriter.h \
+    settingsdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    settingsdialog.ui

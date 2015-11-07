@@ -14,14 +14,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->splitter->setStretchFactor(0,5);
     ui->splitter->setStretchFactor(1,1);
 
-
+    // group buttons and assign indexes
     ui->sendButtonGroup->setId(ui->sendMessageBit, AS_BIT);
     ui->sendButtonGroup->setId(ui->sendMessageHex, AS_HEX);
     ui->sendButtonGroup->setId(ui->sendMessageChar, AS_CHAR);
 
-    ui->outputButtonGroup->setId(ui->displayOutputBit, AS_BIT);
-    ui->outputButtonGroup->setId(ui->displayOutputHex, AS_HEX);
-    ui->outputButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
+    ui->displayButtonGroup->setId(ui->displayOutputBit, AS_BIT);
+    ui->displayButtonGroup->setId(ui->displayOutputHex, AS_HEX);
+    ui->displayButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
 
     // keyboard shortcuts
     m_escapeClear = new QShortcut(QKeySequence(Qt::Key_Escape),this);
@@ -29,10 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // allocate
     m_comPort = new SerialPortManager(this);
-    // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
-    m_writer = new FileWriter(this,
-         QFileDialog::getExistingDirectory(this,QString("Select log file save location"),DEFAULT_DIR));
-    // CHANGE DEFAULT FILE LOCATION FOR WINDOWS
 
     // shortcut key connects
 
@@ -54,12 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // handleDisconnected
     connect(m_comPort,SIGNAL(disconnected()),SLOT(handleDisconnected()));
 
-    // handlePacket
-    connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
-
     // file and serial setup
-    m_writer->setUp();
-    m_comPort->setUpSerial(10400);
+    m_comPort->setUpSerial(57600);
 
 } // constructor
 
@@ -109,9 +101,9 @@ void MainWindow::handlePacket(QByteArray packet)
 {
     QString currentText = ui->serialTextBrowser->toPlainText();
     QString packetAsHex;
-    int checkedId = ui->outputButtonGroup->checkedId();
+    int checkedId = ui->displayButtonGroup->checkedId();
 //    qDebug() << packet.toHex();
-    const int maxBytesPerLine = 16;
+    const int maxBytesPerLine = 6;
 //    const int maxBitsPerLine = 4 * maxBytesPerLine;
 //    const int maxCharPerLine = 20;
     static quint64 numBytes;
@@ -130,8 +122,8 @@ void MainWindow::handlePacket(QByteArray packet)
         for(int i = 0; i < packetAsHex.length(); ++i){
             if(counter == 0){
                 if(!endOfByte){
-                    currentText.append(QDateTime::currentDateTime().toString(QString("hh:mm:ss ")));
-                    currentText.append(QString("(%1):  ").arg(numBytes));
+                    currentText.append(QDateTime::currentDateTime().toString(QString("hh:mm:ss:zzz ")));
+//                    currentText.append(QString("(%1):  ").arg(numBytes));
                     currentText.append(packetAsHex[i]);
                     endOfByte = true;
                 } else{
@@ -210,15 +202,11 @@ void MainWindow::handleConnected(qint32 baud)
 
 } // handleConnected()
 
-
-
 // handleDisconnected()
 void MainWindow::handleDisconnected()
 {
     statusMessage(QString("Disonnected."), 5000);
 } // handleDisconnected()
-
-
 
 // statusMessage()
 void MainWindow::statusMessage(QString message)
@@ -246,74 +234,19 @@ void MainWindow::on_actionReconnect_triggered()
    m_comPort->reconnect();
 } // reconnect triggered
 
-
-
-// pause check
-void MainWindow::on_pauseLogging_clicked(bool checked)
-{
-    if(checked){
-        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
-    } else{
-        m_writer->openFile();
-        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),m_writer,SLOT(handlePacket(QByteArray)));
-    }
-} // pause check
-
-
-
-// set baud to 9600
-void MainWindow::on_actionBaud_9600_triggered()
-{
-    ui->actionBaud_9600->setEnabled(false);
-    ui->actionBaud_10400->setEnabled(true);
-    ui->actionBaud_115200->setEnabled(true);
-    m_comPort->reconnect(9600);
-} // set baud to 9600
-
-
-
-// set baud to 10400
-void MainWindow::on_actionBaud_10400_triggered()
-{
-    ui->actionBaud_9600->setEnabled(true);
-    ui->actionBaud_10400->setEnabled(false);
-    ui->actionBaud_115200->setEnabled(true);
-    m_comPort->reconnect(10400);
-} // set baud to 10400
-
-
-
-// pauseDisplay clicked
-void MainWindow::on_pauseDisplay_clicked(bool checked)
-{
-    if(checked){
-        disconnect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
-    } else{
-        connect(m_comPort,SIGNAL(packetReceived(QByteArray)),this,SLOT(handlePacket(QByteArray)));
-    }
-} // pauseDisplay clicked
-
-
-
-// logTimeClicked
-void MainWindow::on_logTime_clicked(bool checked)
-{
-    m_writer->logTimeStamps(checked);
-} // log time clicked
-
-
-
 // escape key
 void MainWindow::on_escape()
 {
     ui->messageLineEdit->clear();
 } // escape key
 
-void MainWindow::on_actionBaud_115200_triggered()
+void MainWindow::on_actionSettings_triggered()
 {
-    ui->actionBaud_9600->setEnabled(true);
-    ui->actionBaud_10400->setEnabled(true);
-    ui->actionBaud_115200->setEnabled(false);
-    m_comPort->reconnect(115200);
+    SettingsDialog settings;
+    settings.show();
+}
+
+void MainWindow::on_pauseScrolling_clicked(bool checked)
+{
 
 }

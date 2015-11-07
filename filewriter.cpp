@@ -74,7 +74,7 @@ void FileWriter::openFile()
 
 // setUp
 void FileWriter::setUp(){
-    if(!m_file->open(QIODevice::WriteOnly)){
+    if(!m_file->open(QIODevice::WriteOnly|QIODevice::Text)){
         emit failedToOpen(m_fileLocation.arg(m_fileName));
     } else{
         emit successfulOpen();
@@ -96,7 +96,7 @@ void FileWriter::handlePacket(QByteArray packet)
 {
     QString currentText;
     QString packetAsHex;
-    const int maxBytesPerLine = 16;
+    const int maxBytesPerLine = 6;
 //    const int maxBitsPerLine = 4 * maxBytesPerLine;
 //    const int maxCharPerLine = 20;
     static quint64 numBytes;
@@ -109,8 +109,8 @@ void FileWriter::handlePacket(QByteArray packet)
     for(int i = 0; i < packetAsHex.length(); ++i){
         if(m_logTimeStamps && counter == 0){
             if(!endOfByte){
-                currentText.append(QDateTime::currentDateTime().toString(QString("hh:mm:ss ")));
-                currentText.append(QString("(%1):  ").arg(numBytes));
+                currentText.append(QDateTime::currentDateTime().toString(QString("hh:mm:ss:zzz ")));
+//                currentText.append(QString("(%1):  ").arg(numBytes));
                 currentText.append(packetAsHex[i]);
                 endOfByte = true;
             } else{

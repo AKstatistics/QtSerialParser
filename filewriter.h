@@ -35,7 +35,7 @@ class FileWriter : public QObject
     Q_OBJECT
 public:
     explicit FileWriter(QObject *parent = 0,
-                        QString fileLocation = QString(DEFAULT_DIR).append("%1"));
+                        QString fileLocation = QString(DEFAULT_DIR));
     ~FileWriter();
 
     void openFile();
