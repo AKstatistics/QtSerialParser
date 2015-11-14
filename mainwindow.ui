@@ -32,22 +32,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="displayOutputBit">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Bits</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">displayButtonGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
            <widget class="QRadioButton" name="displayOutputHex">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Hex</string>
@@ -56,7 +43,7 @@
              <bool>true</bool>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">displayButtonGroup</string>
@@ -66,10 +53,13 @@
           <item>
            <widget class="QRadioButton" name="displayOutputChar">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Char</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">displayButtonGroup</string>
@@ -148,7 +138,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QRadioButton" name="sendMessageBit">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Bits</string>
@@ -161,7 +151,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QRadioButton" name="sendMessageHex">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Hex</string>
@@ -170,7 +160,7 @@ p, li { white-space: pre-wrap; }
              <bool>true</bool>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">sendButtonGroup</string>
@@ -180,10 +170,13 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QRadioButton" name="sendMessageChar">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Char</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">sendButtonGroup</string>
@@ -195,25 +188,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <layout class="QHBoxLayout" name="lineEditAndButton">
           <item>
-           <widget class="QLineEdit" name="messageLineEdit">
-            <property name="font">
-             <font>
-              <family>Arial Unicode MS</family>
-             </font>
-            </property>
-            <property name="inputMask">
-             <string>HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH</string>
-            </property>
-            <property name="maxLength">
-             <number>251</number>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
+           <widget class="QPlainTextEdit" name="plainTextEdit"/>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -240,6 +215,7 @@ p, li { white-space: pre-wrap; }
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -253,35 +229,96 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Serial</string>
     </property>
+    <widget class="QMenu" name="menuBaud_Rate">
+     <property name="title">
+      <string>Baud Rate</string>
+     </property>
+     <addaction name="action1200_baud"/>
+     <addaction name="action2400_baud"/>
+     <addaction name="action4800_baud"/>
+     <addaction name="action9600_baud"/>
+     <addaction name="action19200_baud"/>
+     <addaction name="action38400_baud"/>
+     <addaction name="action57600_baud"/>
+     <addaction name="action115200_baud"/>
+     <addaction name="actionCustom_baud"/>
+    </widget>
+    <widget class="QMenu" name="menuSelect_Port">
+     <property name="title">
+      <string>Select Port</string>
+     </property>
+     <addaction name="actionNo_available_ports"/>
+    </widget>
     <addaction name="actionReconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionSettings"/>
+    <addaction name="menuSelect_Port"/>
+    <addaction name="menuBaud_Rate"/>
    </widget>
    <addaction name="menuSerial"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionReconnect">
    <property name="text">
     <string>Reconnect</string>
    </property>
   </action>
-  <action name="actionSettings">
+  <action name="action1200_baud">
    <property name="text">
-    <string>Settings</string>
+    <string>1200 baud</string>
    </property>
   </action>
-  <action name="actionOptions">
+  <action name="action2400_baud">
    <property name="text">
-    <string>Options</string>
+    <string>2400 baud</string>
+   </property>
+  </action>
+  <action name="action4800_baud">
+   <property name="text">
+    <string>4800 baud</string>
+   </property>
+  </action>
+  <action name="action9600_baud">
+   <property name="text">
+    <string>9600 baud</string>
+   </property>
+  </action>
+  <action name="action19200_baud">
+   <property name="text">
+    <string>19200 baud</string>
+   </property>
+  </action>
+  <action name="action38400_baud">
+   <property name="text">
+    <string>38400 baud</string>
+   </property>
+  </action>
+  <action name="action57600_baud">
+   <property name="text">
+    <string>57600 baud</string>
+   </property>
+  </action>
+  <action name="action115200_baud">
+   <property name="text">
+    <string>115200 baud</string>
+   </property>
+  </action>
+  <action name="actionCustom_baud">
+   <property name="text">
+    <string>Custom baud</string>
+   </property>
+  </action>
+  <action name="actionNo_available_ports">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>No available ports</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>messageLineEdit</tabstop>
   <tabstop>sendMessage</tabstop>
   <tabstop>pauseScrolling</tabstop>
-  <tabstop>displayOutputBit</tabstop>
   <tabstop>displayOutputHex</tabstop>
   <tabstop>displayOutputChar</tabstop>
   <tabstop>sendMessageHex</tabstop>
@@ -290,7 +327,7 @@ p, li { white-space: pre-wrap; }
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="displayButtonGroup"/>
   <buttongroup name="sendButtonGroup"/>
+  <buttongroup name="displayButtonGroup"/>
  </buttongroups>
 </ui>
