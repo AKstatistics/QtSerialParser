@@ -47,15 +47,19 @@ private slots:
 
     void on_sendMessage_clicked();
 
-    void on_escape();
-
     void changePort();
     void changeBaud();
+    void changeDataBits(QAction * action);
+    void changeFlowControl(QAction * action);
+    void changeStopBits(QAction * action);
+    void changeParity(QAction * action);
     void customBaud(int baud);
 
     void on_actionReconnect_triggered();
 
     void on_actionCustom_baud_triggered();
+
+    void on_clear_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -63,8 +67,6 @@ private:
     SerialPortManager *m_comPort;
     QThread * m_portThread;
 
-    int m_bytesPerLine;
-    QShortcut * m_escapeClear;
     PortSettings m_portSettings;
     bool m_connected;
     QString m_textAsHex;

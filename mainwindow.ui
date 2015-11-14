@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Quick and Dirty Parser</string>
+   <string>Adam Levy's Serial Parser</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -195,13 +195,32 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QPushButton" name="sendMessage">
               <property name="enabled">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <property name="toolTip">
-               <string>ENTER</string>
+               <string>Alt + Enter</string>
               </property>
               <property name="text">
                <string>Send</string>
+              </property>
+              <property name="shortcut">
+               <string>Alt+Return</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="clear">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>Esc</string>
+              </property>
+              <property name="text">
+               <string>Clear</string>
+              </property>
+              <property name="shortcut">
+               <string>Esc</string>
               </property>
              </widget>
             </item>
@@ -249,10 +268,49 @@ p, li { white-space: pre-wrap; }
      </property>
      <addaction name="actionNo_available_ports"/>
     </widget>
+    <widget class="QMenu" name="menuData_Bits">
+     <property name="title">
+      <string>Data Bits</string>
+     </property>
+     <addaction name="action8_bits"/>
+     <addaction name="action7_bits"/>
+     <addaction name="action6"/>
+     <addaction name="action5"/>
+    </widget>
+    <widget class="QMenu" name="menuStop_Bits">
+     <property name="title">
+      <string>Stop Bits</string>
+     </property>
+     <addaction name="actionOne_Stop"/>
+     <addaction name="actionOne_and_Half_Stop"/>
+     <addaction name="actionTwo_Stop"/>
+    </widget>
+    <widget class="QMenu" name="menuParity">
+     <property name="title">
+      <string>Parity</string>
+     </property>
+     <addaction name="actionNo_Parity"/>
+     <addaction name="actionEven_Parity"/>
+     <addaction name="actionOdd_Parity"/>
+     <addaction name="actionSpace_Parity"/>
+     <addaction name="actionMark_Parity"/>
+    </widget>
+    <widget class="QMenu" name="menuFlow_Control">
+     <property name="title">
+      <string>Flow Control</string>
+     </property>
+     <addaction name="actionNone"/>
+     <addaction name="actionHardware_Control"/>
+     <addaction name="actionSoftware_Control"/>
+    </widget>
     <addaction name="actionReconnect"/>
     <addaction name="separator"/>
     <addaction name="menuSelect_Port"/>
     <addaction name="menuBaud_Rate"/>
+    <addaction name="menuData_Bits"/>
+    <addaction name="menuStop_Bits"/>
+    <addaction name="menuParity"/>
+    <addaction name="menuFlow_Control"/>
    </widget>
    <addaction name="menuSerial"/>
   </widget>
@@ -292,6 +350,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="action57600_baud">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>57600 baud</string>
    </property>
@@ -314,10 +375,96 @@ p, li { white-space: pre-wrap; }
     <string>No available ports</string>
    </property>
   </action>
+  <action name="action8_bits">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>8 bits</string>
+   </property>
+  </action>
+  <action name="action7_bits">
+   <property name="text">
+    <string>7 bits</string>
+   </property>
+  </action>
+  <action name="action6">
+   <property name="text">
+    <string>6 bits</string>
+   </property>
+  </action>
+  <action name="action5">
+   <property name="text">
+    <string>5 bits</string>
+   </property>
+  </action>
+  <action name="actionNo_Parity">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>No Parity</string>
+   </property>
+  </action>
+  <action name="actionEven_Parity">
+   <property name="text">
+    <string>Even Parity</string>
+   </property>
+  </action>
+  <action name="actionOdd_Parity">
+   <property name="text">
+    <string>Odd Parity</string>
+   </property>
+  </action>
+  <action name="actionSpace_Parity">
+   <property name="text">
+    <string>Space Parity</string>
+   </property>
+  </action>
+  <action name="actionMark_Parity">
+   <property name="text">
+    <string>Mark Parity</string>
+   </property>
+  </action>
+  <action name="actionOne_Stop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>One Stop</string>
+   </property>
+  </action>
+  <action name="actionOne_and_Half_Stop">
+   <property name="text">
+    <string>One and Half Stop</string>
+   </property>
+  </action>
+  <action name="actionTwo_Stop">
+   <property name="text">
+    <string>Two Stop</string>
+   </property>
+  </action>
+  <action name="actionNone">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>None</string>
+   </property>
+  </action>
+  <action name="actionHardware_Control">
+   <property name="text">
+    <string>Hardware Control</string>
+   </property>
+  </action>
+  <action name="actionSoftware_Control">
+   <property name="text">
+    <string>Software Control</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>sendMessage</tabstop>
   <tabstop>pauseScrolling</tabstop>
   <tabstop>displayOutputHex</tabstop>
   <tabstop>displayOutputChar</tabstop>
@@ -327,7 +474,7 @@ p, li { white-space: pre-wrap; }
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="sendButtonGroup"/>
   <buttongroup name="displayButtonGroup"/>
+  <buttongroup name="sendButtonGroup"/>
  </buttongroups>
 </ui>

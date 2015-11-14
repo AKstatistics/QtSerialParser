@@ -22,10 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->displayButtonGroup->setId(ui->displayOutputHex, AS_HEX);
     ui->displayButtonGroup->setId(ui->displayOutputChar, AS_CHAR);
 
-    // keyboard shortcuts
-    m_escapeClear = new QShortcut(QKeySequence(Qt::Key_Escape),this);
-
-
     // allocate
     m_comPort = new SerialPortManager(this);
     m_portSettings.portName = "";
@@ -37,12 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this, SIGNAL(send(QByteArray)), m_comPort, SLOT(send(QByteArray)));
 
-    // shortcut key connects
-    connect(m_escapeClear, SIGNAL(activated()),SLOT(on_escape()));
-
     // handlePacket
     connect(m_comPort,SIGNAL(packetReceived(QByteArray)),SLOT(handlePacket(QByteArray)));
-    m_bytesPerLine = 6;
 
     connect(m_comPort,SIGNAL(serialPortError(QSerialPort::SerialPortError)),SLOT(handleSerialPortError(QSerialPort::SerialPortError)));
     connect(m_comPort,SIGNAL(connected()), SLOT(handleConnected()));
@@ -62,8 +54,12 @@ MainWindow::MainWindow(QWidget *parent) :
     foreach(QAction * action, baudRateActions){
         connect(action, SIGNAL(triggered(bool)), this, SLOT(changeBaud()));
     }
-    connect(ui->displayOutputChar, SIGNAL(toggled(bool)), this, SLOT(changeDisplayFormat(bool)));
+    connect(ui->menuData_Bits,SIGNAL(triggered(QAction*)),this,SLOT(changeDataBits(QAction*)));
+    connect(ui->menuStop_Bits,SIGNAL(triggered(QAction*)),this,SLOT(changeStopBits(QAction*)));
+    connect(ui->menuFlow_Control,SIGNAL(triggered(QAction*)),this,SLOT(changeFlowControl(QAction*)));
+    connect(ui->menuParity,SIGNAL(triggered(QAction*)),this,SLOT(changeParity(QAction*)));
 
+    connect(ui->displayOutputChar, SIGNAL(toggled(bool)), this, SLOT(changeDisplayFormat(bool)));
     connect(ui->plainTextEdit, SIGNAL(textChanged()), this, SLOT(handleSendMessageFormatting()));
 }
 
@@ -289,6 +285,13 @@ void MainWindow::handleSendMessageFormatting()
         ui->plainTextEdit->setTextCursor(cursor);
         ui->plainTextEdit->blockSignals(false);
     }
+    if(ui->plainTextEdit->toPlainText().length() > 0){
+        ui->sendMessage->setEnabled(true);
+        ui->clear->setEnabled(true);
+    } else{
+        ui->sendMessage->setEnabled(false);
+        ui->clear->setEnabled(false);
+    }
 }
 
 void MainWindow::changeDisplayFormat(bool asChar)
@@ -302,7 +305,66 @@ void MainWindow::changeDisplayFormat(bool asChar)
 
 void MainWindow::handlePortSettingsChanged(PortSettings newSettings)
 {
+    // copy new settings
     m_portSettings = newSettings;
+
+    // update which items are disabled in the serial menus
+
+    // Select Port, port name
+    foreach(QAction * action, ui->menuSelect_Port->actions()){
+        QString name = action->text();
+        action->setEnabled((name != m_portSettings.portName));
+    }
+
+    // Baud Rate
+    foreach(QAction * action, ui->menuBaud_Rate->actions()){
+        QString baudString = action->text();
+        baudString.chop(5);
+        int baud = baudString.toInt();
+        action->setEnabled((baud != m_portSettings.baud));
+    }
+
+    // Data bits
+    foreach(QAction * action, ui->menuData_Bits->actions()){
+        QString dataBitString = action->text();
+        dataBitString.chop(5);
+        int dataBits = dataBitString.toInt();
+        action->setEnabled((((QSerialPort::DataBits)dataBits) != m_portSettings.dataBits));
+    }
+
+    // Flow control
+    QList<QAction *> actions = ui->menuFlow_Control->actions();
+    for(int i = 0; i < actions.length(); i++){
+        actions[i]->setEnabled((((QSerialPort::FlowControl)i)!=m_portSettings.flowControl));
+    }
+
+    // Parity
+    actions = ui->menuParity->actions();
+    for(int i = 0; i < actions.length(); i++){
+        int parity = i;
+        if(i > 0){
+            parity++;
+        }
+        actions[i]->setEnabled((((QSerialPort::Parity)parity)!=m_portSettings.parity));
+    }
+
+    // Stop bits
+    actions = ui->menuStop_Bits->actions();
+    for(int i = 0; i < actions.length(); i++){
+        QSerialPort::StopBits stopBits;
+        switch(i){
+        case 0:
+            stopBits = QSerialPort::OneStop;
+            break;
+        case 1:
+            stopBits = QSerialPort::OneAndHalfStop;
+            break;
+        case 2:
+            stopBits = QSerialPort::TwoStop;
+        }
+
+        actions[i]->setEnabled((stopBits!=m_portSettings.stopBits));
+    }
 }
 
 void MainWindow::handleSent(qint64 numBytes)
@@ -352,11 +414,6 @@ void MainWindow::statusMessage(QString message, int timeout)
 
 }
 
-void MainWindow::on_escape()
-{
-    ui->plainTextEdit->clear();
-}
-
 void MainWindow::changePort()
 {
     QString portName = qobject_cast<QAction *>(sender())->data().toString();
@@ -372,6 +429,81 @@ void MainWindow::changeBaud()
     PortSettings newSettings = m_portSettings;
     newSettings.baud = baudText.toInt();
     statusMessage(QString("Baud rate set: %1").arg(newSettings.baud));
+    emit updatePortSettings(newSettings);
+}
+
+void MainWindow::changeDataBits(QAction * action)
+{
+    QString dataBitsText = action->text();
+    dataBitsText.chop(5);
+    int dataBits = dataBitsText.toInt();
+    PortSettings newSettings = m_portSettings;
+    newSettings.dataBits = (QSerialPort::DataBits)dataBits;
+    statusMessage(QString("Data bits set: %1 bits ").arg(dataBits));
+    emit updatePortSettings(newSettings);
+}
+
+void MainWindow::changeFlowControl(QAction * action)
+{
+    QString flowControlText = action->text();
+
+    QList<QAction *> actions = ui->menuFlow_Control->actions();
+    PortSettings newSettings = m_portSettings;
+    for(int i = 0; i < actions.length(); i++){
+        if(actions[i]->text() == flowControlText){
+            newSettings.flowControl = (QSerialPort::FlowControl)i;
+            break;
+        }
+    }
+    statusMessage(QString("Flow control set: %1 ").arg(flowControlText));
+    emit updatePortSettings(newSettings);
+}
+
+void MainWindow::changeStopBits(QAction * action)
+{
+    QString stopBitsText = action->text();
+    int correctIndex = 0;
+    QList<QAction *> actions = ui->menuStop_Bits->actions();
+    for(int i = 0; i < actions.length(); i++){
+        if(actions[i]->text() == stopBitsText){
+            correctIndex = i;
+            break;
+        }
+    }
+    QSerialPort::StopBits stopBits;
+    switch(correctIndex){
+    case 0:
+        stopBits = QSerialPort::OneStop;
+        break;
+    case 1:
+        stopBits = QSerialPort::OneAndHalfStop;
+        break;
+    case 2:
+        stopBits = QSerialPort::TwoStop;
+    }
+    PortSettings newSettings = m_portSettings;
+    newSettings.stopBits = stopBits;
+    statusMessage(QString("Stop bits set: %1 ").arg(stopBitsText));
+    emit updatePortSettings(newSettings);
+}
+
+void MainWindow::changeParity(QAction * action)
+{
+    QString parityText = action->text();
+    QList<QAction *> actions = ui->menuParity->actions();
+    QSerialPort::Parity parity = QSerialPort::NoParity;
+    for(int i = 0; i < actions.length(); i++){
+        if(actions[i]->text() == parityText){
+            if(i > 0){
+                parity = (QSerialPort::Parity)(i+1);
+            } else{
+                parity = (QSerialPort::Parity)i;
+            }
+        }
+    }
+    PortSettings newSettings = m_portSettings;
+    newSettings.parity = parity;
+    statusMessage(QString("Parity set: %1 ").arg(parityText));
     emit updatePortSettings(newSettings);
 }
 
@@ -397,4 +529,9 @@ void MainWindow::on_actionCustom_baud_triggered()
     SetCustomBaud * customBaudDialog = new SetCustomBaud(this);
     connect(customBaudDialog,SIGNAL(setBaudRate(int)),SLOT(customBaud(int)));
     customBaudDialog->show();
+}
+
+void MainWindow::on_clear_clicked()
+{
+    ui->plainTextEdit->clear();
 }
