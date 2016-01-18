@@ -24,6 +24,7 @@ SerialPortManager::SerialPortManager(QObject *parent)
     // deal with readyRead()
     connect(m_serialPort, &QSerialPort::readyRead, this, &SerialPortManager::handleReadyRead);
 
+    m_serialPort->clear();
     emit portSettingsChanged(m_settings);
 }
 
@@ -81,6 +82,10 @@ void SerialPortManager::reconnect()
 void SerialPortManager::handleReadyRead()
 {
     // readReady() has been emitted, so now we clear the m_serialPort buffer
-    QByteArray data = m_serialPort->readAll();
+//    QByteArray data = m_serialPort->readAll();
+    QByteArray data;
+    while(!m_serialPort->atEnd()){
+        data+=m_serialPort->readAll();
+    }
     emit packetReceived(data);
 }

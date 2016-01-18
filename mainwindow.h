@@ -40,6 +40,8 @@ private slots:
     void handleSendMessageFormatting();
     void changeDisplayFormat(bool asChar);
 
+    void enableClearButton();
+
     void handlePortSettingsChanged(PortSettings);
     void handleSent(qint64 numBytes);
 
@@ -61,6 +63,8 @@ private slots:
 
     void on_clear_clicked();
 
+    void on_clearDisplayButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -69,6 +73,7 @@ private:
 
     PortSettings m_portSettings;
     bool m_connected;
+    int m_numBytesDisplayed;
     QString m_textAsHex;
     QString m_text;
 

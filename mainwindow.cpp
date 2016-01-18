@@ -61,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->displayOutputChar, SIGNAL(toggled(bool)), this, SLOT(changeDisplayFormat(bool)));
     connect(ui->plainTextEdit, SIGNAL(textChanged()), this, SLOT(handleSendMessageFormatting()));
+    connect(ui->serialTextBrowser,SIGNAL(textChanged()), this, SLOT(enableClearButton()));
+    m_numBytesDisplayed = 0;
 }
 
 MainWindow::~MainWindow()
@@ -147,7 +149,11 @@ void MainWindow::on_sendMessage_clicked()
 // handlePacket
 void MainWindow::handlePacket(QByteArray packet)
 {
+    if(m_numBytesDisplayed > 60000){
+        on_clearDisplayButton_clicked();
+    }
     QString addedText = packet.toHex();
+    m_numBytesDisplayed += packet.length();
     addedText = addedText.toUpper();
     int len = addedText.length();
     for(int i = 0; i < len; i++){
@@ -170,6 +176,7 @@ void MainWindow::handlePacket(QByteArray packet)
     } else{
         ui->serialTextBrowser->verticalScrollBar()->setSliderPosition(sliderPosition);
     }
+    statusMessage(QString("%1 bytes received.").arg(m_numBytesDisplayed));
 }
 
 void MainWindow::handleSerialPortError(QSerialPort::SerialPortError error)
@@ -250,6 +257,17 @@ void MainWindow::handleFailedToConnect()
 
 void MainWindow::handleSendMessageFormatting()
 {
+    //psuedo code:
+    //  for each char sym in inputText:
+    //      if sym is a valid hex/bit character or space,
+    //              add it to the formattedText
+    //      else
+    //              print a status message explaining why sym
+    //              wasn't able to be typed
+
+    //  at the end of this function the send and clear buttons
+    //  are disabled/enabled based on whether the input is empty/!empty
+
     if(ui->sendButtonGroup->checkedId() == AS_HEX){
         QString inputText = ui->plainTextEdit->toPlainText();
         QString formattedText = "";
@@ -285,6 +303,9 @@ void MainWindow::handleSendMessageFormatting()
         ui->plainTextEdit->setTextCursor(cursor);
         ui->plainTextEdit->blockSignals(false);
     }
+
+    // enable/disable send and clear buttons
+    // based on whether there is text in the plainTextEdit
     if(ui->plainTextEdit->toPlainText().length() > 0){
         ui->sendMessage->setEnabled(true);
         ui->clear->setEnabled(true);
@@ -300,6 +321,14 @@ void MainWindow::changeDisplayFormat(bool asChar)
         ui->serialTextBrowser->setText(m_text);
     } else{
         ui->serialTextBrowser->setText(m_textAsHex);
+    }
+}
+
+void MainWindow::enableClearButton()
+{
+    if( ui->serialTextBrowser->toPlainText().length() > 0){
+        ui->clearDisplayButton->setEnabled(true);
+        disconnect(ui->serialTextBrowser,SIGNAL(textChanged()),this,SLOT(enableClearButton()));
     }
 }
 
@@ -324,6 +353,10 @@ void MainWindow::handlePortSettingsChanged(PortSettings newSettings)
         action->setEnabled((baud != m_portSettings.baud));
     }
 
+    // NOTE the below is a mess. I use the index position of the QAction in the
+    // menu to map to the QSerialPort enum values. Casting to the enum makes it
+    // extra messy.
+
     // Data bits
     foreach(QAction * action, ui->menuData_Bits->actions()){
         QString dataBitString = action->text();
@@ -341,6 +374,8 @@ void MainWindow::handlePortSettingsChanged(PortSettings newSettings)
     // Parity
     actions = ui->menuParity->actions();
     for(int i = 0; i < actions.length(); i++){
+        // look at the values for QSerialPort::Parity and the position
+        // of the action in the menu to make sense of the following.
         int parity = i;
         if(i > 0){
             parity++;
@@ -377,10 +412,13 @@ void MainWindow::populatePortMenu()
     ui->menuSelect_Port->clear();
 
     QList<QAction *> ports;
+    // list through the available ports
     foreach( const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts() ){
+        // create an action named appropriately..
         QString portName = serialPortInfo.portName();
         QAction * portAction = new QAction(portName,0/*ui->menuSelect_Por*/);
         portAction->setData(portName);
+        // check if connected, it'll be disabled so we don't need to connect it
         if(portName == m_portSettings.portName && m_connected){
             portName.append(" (connected)");
             portAction->setText(portName);
@@ -391,6 +429,7 @@ void MainWindow::populatePortMenu()
             ports.push_back(portAction);
         }
     }
+    // toggle hidden No available ports menu item
     if(ports.isEmpty()){
         ui->actionNo_available_ports->setVisible(true);
     } else{
@@ -534,4 +573,15 @@ void MainWindow::on_actionCustom_baud_triggered()
 void MainWindow::on_clear_clicked()
 {
     ui->plainTextEdit->clear();
+}
+
+void MainWindow::on_clearDisplayButton_clicked()
+{
+    ui->serialTextBrowser->clear();
+    m_text.clear();
+    m_textAsHex.clear();
+    m_numBytesDisplayed = 0;
+    ui->clearDisplayButton->setEnabled(false);
+    connect(ui->serialTextBrowser,SIGNAL(textChanged()), this, SLOT(enableClearButton()));
+    ui->statusBar->clearMessage();
 }
